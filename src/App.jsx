@@ -1,11 +1,7 @@
 import SocialEngagementCalculator from "./components/SocialCalculator"
 
 const App = () => {
-  return (
-    <div>
-      <SocialEngagementCalculator />
-    </div>
-  )
+  return <SocialEngagementCalculator />
 }
 
 export default App
