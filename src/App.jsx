@@ -1,10 +1,9 @@
-import SocialCard from "./components/SocialCard"
-
+import SocialEngagementCalculator from "./components/SocialCalculator"
 
 const App = () => {
   return (
     <div>
-      <SocialCard />
+      <SocialEngagementCalculator />
     </div>
   )
 }
