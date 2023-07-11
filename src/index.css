@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.grad-text{
+    background: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #ff8c04 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body {
+    @apply h-screen overflow-hidden
+}
