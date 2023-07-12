@@ -8,6 +8,10 @@
     -webkit-text-fill-color: transparent;
 }
 
+.bg-grad{
+    background: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #ff8c04 100%);
+}
+
 body {
     @apply h-screen overflow-hidden
 }

@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import instagram from "../assets/insta.png";
 import ytb from "../assets/ytb.png";
+
+import followers_data from "../dummyfollwers.json"
+import posts from "../dummyposts.json"
 
 const SocialCalculator = () => {
   const [insta, setInsta] = useState(true)
@@ -12,6 +15,25 @@ const SocialCalculator = () => {
     e.preventDefault();
     alert("ytb");
   };
+
+  useEffect(() => {
+    const followers = followers_data.user.follower_count;
+    const following = followers_data.user.following_count;
+    const post_count = posts.data.user.edge_owner_to_timeline_media.count;
+
+    const all_posts = posts.data.user.edge_owner_to_timeline_media.edges
+    let views = 0;
+    let likes = 0;
+    let comments = 0;
+    all_posts.map( (post) => {
+        views += post.node.video_view_count;
+        likes += post.node.edge_media_preview_like.count
+        comments += post.node.edge_media_to_comment.count
+      }
+    )
+
+    console.log(followers, following, post_count, views, likes, comments)
+  }, [])
   return (
     <div>
       <div className="flex flex-col items-center py-12 gap-4">
