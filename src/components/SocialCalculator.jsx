@@ -22,17 +22,19 @@ const SocialCalculator = () => {
     const post_count = posts.data.user.edge_owner_to_timeline_media.count;
 
     const all_posts = posts.data.user.edge_owner_to_timeline_media.edges
-    let views = 0;
+    let video_count = post_count;
+    let video_views = 0;
     let likes = 0;
     let comments = 0;
     all_posts.map( (post) => {
-        views += post.node.video_view_count;
-        likes += post.node.edge_media_preview_like.count
-        comments += post.node.edge_media_to_comment.count
+        post.node.is_video? video_views += post.node.video_view_count : video_count -= 1;
+        likes += post.node.edge_media_preview_like.count;
+        !post.node.comments_disabled? comments += post.node.edge_media_to_comment.count : null;
       }
     )
 
-    console.log(followers, following, post_count, views, likes, comments)
+    console.log(followers, following, post_count, video_views, video_count, likes, comments)
+    console.log("engagement rate: ", (likes + video_views  + comments)/post_count/followers*100)
   }, [])
   return (
     <div>
