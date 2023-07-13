@@ -38,7 +38,7 @@ const SocialCalculator = () => {
 
   }, [])
   return (
-    <div>
+    <div className="flex items-center justify-center">
       <div className="flex flex-col items-center py-12 gap-4">
         <div className="text-3xl text-center font-bold grad-text">
           Social Engagement Calculator
@@ -98,47 +98,84 @@ const SocialCalculator = () => {
           </div>
         </form>
         {/* polar area chart using chart.js showing followers, following, posts, likes, comments and a big text showing engagement rate */}
-        <div className="lg:absolute top-0 right-0 h-[100vh!important]">
-          <Bar
-            className="h-[18rem!important] w-[auto!important] mt-[10rem]"
-            data={{
-              labels: ["Posts", "Likes", "Comments"],
-              datasets: [
-                {
-                  data: [100, 5000, 2000],
-                  backgroundColor: [
-                    "rgba(255, 99, 132)",
-                    "rgba(54, 162, 235)",
-                    "rgba(255, 206, 86)",
-                  ],
-                  borderColor: [
-                    "rgba(255, 99, 132, 1)",
-                    "rgba(54, 162, 235, 1)",
-                    "rgba(255, 206, 86, 1)",
-                  ],
-                  borderWidth: 1,
-                },
-              ],
-            }}
-            options={{
-              plugins: {
-                legend: {
-                  display: false,
-                },
-                title: {
-                  display: true,
-                  text: "Posts Data",
-                  font: {
-                    size: 20,
-                    weight: "bold",
-                  },
-                  color: "#8508FF",
-                },
+      </div>
+      <div className="lg:absolute top-0 right-0 h-[100vh!important]">
+        <Bar
+          className="h-[18rem!important] w-[auto!important] mt-[12rem]"
+          data={{
+            labels: ["Posts", "Likes", "Comments"],
+            datasets: [
+              {
+                barThickness: 50,
+                data: [100, 5000, 2000],
+                backgroundColor: [
+                  "rgba(255, 99, 132)",
+                  "rgba(54, 162, 235)",
+                  "rgba(255, 206, 86)",
+                ],
+                borderColor: [
+                  "rgba(255, 99, 132, 1)",
+                  "rgba(54, 162, 235, 1)",
+                  "rgba(255, 206, 86, 1)",
+                ],
+                borderWidth: 1,
               },
-              responsive: true,
-            }}
-          />
-        </div>
+            ],
+          }}
+          options={{
+            plugins: {
+              legend: {
+                display: false,
+              },
+              title: {
+                display: true,
+                position: "bottom",
+                text: "Posts Data",
+                font: {
+                  size: 20,
+                  weight: "bold",
+                },
+                color: "#8508FF",
+              },
+            },
+            responsive: true,
+          }}
+        />
+      </div>
+      <div className="lg:absolute top-0 left-0 h-[100vh!important]">
+        <PolarArea
+          className="h-[30rem!important] w-[auto!important]"
+          data={{
+            labels: ["Followers", "Following"],
+            datasets: [
+              {
+                data: [5000, 2000],
+                backgroundColor: [
+                  "rgba(255, 0, 0, 0.6)",
+                  "rgba(56, 255, 12, 0.6)",
+                ],
+              },
+            ],
+          }}
+          options={{
+            plugins: {
+              legend: {
+                position: "right"
+              },
+              title: {
+                position: "bottom",
+                display: true,
+                text: "Followers Data",
+                font: {
+                  size: 20,
+                  weight: "bold",
+                },
+                color: "orange",
+              },
+            },
+            responsive: true,
+          }}
+        />
       </div>
     </div>
   );
