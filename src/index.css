@@ -13,5 +13,6 @@
 }
 
 body {
-    @apply h-screen overflow-hidden
+    @apply h-screen lg:overflow-hidden
 }
+
