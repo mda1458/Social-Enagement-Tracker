@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import instagram from "../assets/insta.png";
 import ytb from "../assets/ytb.png";
+import { Bar, PolarArea } from "react-chartjs-2";
 
-import followers_data from "../dummyfollwers.json"
-import posts from "../dummyposts.json"
+import data from "../data.json";
 
 const SocialCalculator = () => {
   const [insta, setInsta] = useState(true)
@@ -17,24 +17,25 @@ const SocialCalculator = () => {
   };
 
   useEffect(() => {
-    const followers = followers_data.user.follower_count;
-    const following = followers_data.user.following_count;
-    const post_count = posts.data.user.edge_owner_to_timeline_media.count;
+    const followers = data[0].follower_count;
+    const following = data[0].following_count;
+    const posts = data[0].feed.data;
+    const likes = posts.reduce((acc, curr) => acc + curr.like_count, 0);
+    const comments = posts.reduce((acc, curr) => acc + curr.comment_count, 0);
+    const likesperpost = likes / posts.length;
+    const commentsperpost = comments / posts.length;
+    const engagementrate = ((likesperpost + commentsperpost) / followers) * 100;
+    console.log("followers : ", followers);
+    console.log("following : ", following);
+    console.log("posts : ", posts);
+    console.log("likes : ", likes);
+    console.log("comments : ", comments);
+    console.log("likesperpost : ", likesperpost);
+    console.log("commentsperpost : ", commentsperpost);
+    console.log("engagementrate : ", engagementrate);
 
-    const all_posts = posts.data.user.edge_owner_to_timeline_media.edges
-    let video_count = post_count;
-    let video_views = 0;
-    let likes = 0;
-    let comments = 0;
-    all_posts.map( (post) => {
-        post.node.is_video? video_views += post.node.video_view_count : video_count -= 1;
-        likes += post.node.edge_media_preview_like.count;
-        !post.node.comments_disabled? comments += post.node.edge_media_to_comment.count : null;
-      }
-    )
 
-    console.log(followers, following, post_count, video_views, video_count, likes, comments)
-    console.log("engagement rate: ", (likes + video_views  + comments)/post_count/followers*100)
+
   }, [])
   return (
     <div>
@@ -45,20 +46,24 @@ const SocialCalculator = () => {
         {/* Navigator between insta, youtube forms */}
         <div className="flex justify-center gap-6">
           <button
-            className={`rounded-md px-4 py-2 hover:rotate-[-25deg] ease-linear duration-200 ${insta? "rotate-[-25deg]": ""}`}
+            className={`rounded-md px-4 py-2 hover:rotate-[-25deg] ease-linear duration-200 ${
+              insta ? "rotate-[-25deg]" : ""
+            }`}
             onClick={() => setInsta(true)}
           >
             <img src={instagram} alt="insta" className="w-10 h-10" />
           </button>
           <button
-            className={`rounded-md px-4 py-2 hover:rotate-[-25deg] ease-linear duration-200 ${insta? "" : "rotate-[-25deg]"}`}
+            className={`rounded-md px-4 py-2 hover:rotate-[-25deg] ease-linear duration-200 ${
+              insta ? "" : "rotate-[-25deg]"
+            }`}
             onClick={() => setInsta(false)}
           >
             <img src={ytb} alt="insta" className="w-16 h-16" />
           </button>
         </div>
         {/* Form */}
-        <form onSubmit={insta? instaHandle : ytbHandle}>
+        <form onSubmit={insta ? instaHandle : ytbHandle}>
           <div className="flex flex-col gap-4">
             {/* label */}
             <div className="text-xl text-center font-bold grad-text">
@@ -92,7 +97,48 @@ const SocialCalculator = () => {
             </div>
           </div>
         </form>
-        
+        {/* polar area chart using chart.js showing followers, following, posts, likes, comments and a big text showing engagement rate */}
+        <div className="lg:absolute top-0 right-0 h-[100vh!important]">
+          <Bar
+            className="h-[18rem!important] w-[auto!important] mt-[10rem]"
+            data={{
+              labels: ["Posts", "Likes", "Comments"],
+              datasets: [
+                {
+                  data: [100, 5000, 2000],
+                  backgroundColor: [
+                    "rgba(255, 99, 132)",
+                    "rgba(54, 162, 235)",
+                    "rgba(255, 206, 86)",
+                  ],
+                  borderColor: [
+                    "rgba(255, 99, 132, 1)",
+                    "rgba(54, 162, 235, 1)",
+                    "rgba(255, 206, 86, 1)",
+                  ],
+                  borderWidth: 1,
+                },
+              ],
+            }}
+            options={{
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                title: {
+                  display: true,
+                  text: "Posts Data",
+                  font: {
+                    size: 20,
+                    weight: "bold",
+                  },
+                  color: "#8508FF",
+                },
+              },
+              responsive: true,
+            }}
+          />
+        </div>
       </div>
     </div>
   );
