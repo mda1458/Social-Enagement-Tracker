@@ -1,44 +1,63 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import axios from "axios";
+
 import instagram from "../assets/insta.png";
 import ytb from "../assets/ytb.png";
 import { Bar, PolarArea } from "react-chartjs-2";
 
-import data from "../data.json";
-
 const SocialCalculator = () => {
+  const [loading, setLoading] = useState(false);
+
   const [insta, setInsta] = useState(true)
-  const instaHandle = (e) => {
+  const [follow, setFollow] = useState([])
+  const [posts, setPosts] = useState([])
+  const [engagement, setEngagement] = useState(0)
+
+
+  const instaHandle = async (e) => {
     e.preventDefault();
-    alert("insta");
+    setLoading(true);
+    const username = e.target.username.value;
+    const options = {
+      method: 'GET',
+      url: 'https://instagram-bulk-profile-scrapper.p.rapidapi.com/clients/api/ig/ig_profile',
+      params: {
+        ig: username,
+        response_type: 'feeds'
+      },
+      headers: {
+        'X-RapidAPI-Key': import.meta.env.VITE_INSTA_KEY,
+        'X-RapidAPI-Host': 'instagram-bulk-profile-scrapper.p.rapidapi.com'
+      }
+    };
+
+    try {
+      const response = await axios.request(options);
+      const data = response.data;
+      const followers = data[0].follower_count;
+      const following = data[0].following_count;
+      const posts = data[0].feed.data;
+      const likes = posts.reduce((acc, curr) => acc + curr.like_count, 0);
+      const comments = posts.reduce((acc, curr) => acc + curr.comment_count, 0);
+      const likesperpost = likes / posts.length;
+      const commentsperpost = comments / posts.length;
+      const engagementrate = ((likesperpost + commentsperpost) / followers) * 100;
+      setFollow([followers, following]);
+      setPosts([posts.length, likes, comments]);
+      setEngagement(engagementrate);
+
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
   };
   const ytbHandle = (e) => {
     e.preventDefault();
-    alert("ytb");
   };
 
-  useEffect(() => {
-    const followers = data[0].follower_count;
-    const following = data[0].following_count;
-    const posts = data[0].feed.data;
-    const likes = posts.reduce((acc, curr) => acc + curr.like_count, 0);
-    const comments = posts.reduce((acc, curr) => acc + curr.comment_count, 0);
-    const likesperpost = likes / posts.length;
-    const commentsperpost = comments / posts.length;
-    const engagementrate = ((likesperpost + commentsperpost) / followers) * 100;
-    console.log("followers : ", followers);
-    console.log("following : ", following);
-    console.log("posts : ", posts);
-    console.log("likes : ", likes);
-    console.log("comments : ", comments);
-    console.log("likesperpost : ", likesperpost);
-    console.log("commentsperpost : ", commentsperpost);
-    console.log("engagementrate : ", engagementrate);
-
-
-
-  }, [])
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex flex-col items-center justify-center lg:flex-row">
       <div className="flex flex-col items-center py-12 gap-4">
         <div className="text-3xl text-center font-bold grad-text">
           Social Engagement Calculator
@@ -73,14 +92,14 @@ const SocialCalculator = () => {
             <div className="relative z-0 w-full mb-6 group">
               <input
                 type="text"
-                name="floating"
+                name="username"
                 id="floating"
                 className="block rounded-3xl p-5 w-full z-0 bg-transparent border-2 appearance-none focus:outline-none focus:ring-0 focus:border-pink-600 peer"
                 placeholder=" "
                 required
               />
               <label
-                htmlFor="floating"
+                htmlFor="username"
                 className="bg-white px-2 rounded-md peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-4 z-10 left-2 origin-[0] peer-focus:text-pink-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 Username
@@ -97,88 +116,117 @@ const SocialCalculator = () => {
             </div>
           </div>
         </form>
-        {/* polar area chart using chart.js showing followers, following, posts, likes, comments and a big text showing engagement rate */}
+        {/* Stats Display */}
+        <div className="flex flex-col text-center mt-8">
+          <div className="grad-text text-xl">Results for last 12 Posts</div>
+          {/* grid */}
+          {loading ? (
+            <div className="🤚 my-16">
+              <div className="👉"></div>
+              <div className="👉"></div>
+              <div className="👉"></div>
+              <div className="👉"></div>
+              <div className="🌴"></div>
+              <div className="👍"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-8 mt-4">
+              <div>Followers: {follow[0]}</div>
+              <div>Following: {follow[1]}</div>
+              <div>Posts: {posts[0]}</div>
+              <div>Likes: {posts[1]}</div>
+              <div>Comments: {posts[2]}</div>
+            </div>
+          )}
+          <div className="grad-text text-xl font-bold">
+            Engagement Rate: {engagement}%
+          </div>
+        </div>
       </div>
-      <div className="lg:absolute top-0 right-0 h-[100vh!important]">
-        <Bar
-          className="h-[18rem!important] w-[auto!important] mt-[12rem]"
-          data={{
-            labels: ["Posts", "Likes", "Comments"],
-            datasets: [
-              {
-                barThickness: 50,
-                data: [100, 5000, 2000],
-                backgroundColor: [
-                  "rgba(255, 99, 132)",
-                  "rgba(54, 162, 235)",
-                  "rgba(255, 206, 86)",
-                ],
-                borderColor: [
-                  "rgba(255, 99, 132, 1)",
-                  "rgba(54, 162, 235, 1)",
-                  "rgba(255, 206, 86, 1)",
-                ],
-                borderWidth: 1,
-              },
-            ],
-          }}
-          options={{
-            plugins: {
-              legend: {
-                display: false,
-              },
-              title: {
-                display: true,
-                position: "bottom",
-                text: "Posts Data",
-                font: {
-                  size: 20,
-                  weight: "bold",
+      {posts.length > 0 && (
+        <div className="lg:absolute top-0 right-0 lg:h-[100vh!important]">
+          <Bar
+            className="h-[10rem!important] md:h-[18rem!important] w-[auto!important] lg:mt-[12rem]"
+            data={{
+              labels: ["Posts", "Likes", "Comments"],
+              datasets: [
+                {
+                  barThickness: 50,
+                  data: posts,
+                  backgroundColor: [
+                    "rgba(255, 99, 132)",
+                    "rgba(54, 162, 235)",
+                    "rgba(255, 206, 86)",
+                  ],
+                  borderColor: [
+                    "rgba(255, 99, 132, 1)",
+                    "rgba(54, 162, 235, 1)",
+                    "rgba(255, 206, 86, 1)",
+                  ],
+                  borderWidth: 1,
                 },
-                color: "#8508FF",
-              },
-            },
-            responsive: true,
-          }}
-        />
-      </div>
-      <div className="lg:absolute top-0 left-0 h-[100vh!important]">
-        <PolarArea
-          className="h-[30rem!important] w-[auto!important]"
-          data={{
-            labels: ["Followers", "Following"],
-            datasets: [
-              {
-                data: [5000, 2000],
-                backgroundColor: [
-                  "rgba(255, 0, 0, 0.6)",
-                  "rgba(56, 255, 12, 0.6)",
-                ],
-              },
-            ],
-          }}
-          options={{
-            plugins: {
-              legend: {
-                position: "right"
-              },
-              title: {
-                position: "bottom",
-                display: true,
-                text: "Followers Data",
-                font: {
-                  size: 20,
-                  weight: "bold",
+              ],
+            }}
+            options={{
+              plugins: {
+                legend: {
+                  display: false,
                 },
-                color: "orange",
+                title: {
+                  display: true,
+                  position: "bottom",
+                  text: "Posts Data",
+                  font: {
+                    size: 20,
+                    weight: "bold",
+                  },
+                  color: "#8508FF",
+                },
               },
-            },
-            responsive: true,
-          }}
-        />
-      </div>
+              responsive: true,
+            }}
+          />
+        </div>
+      )}
+      {follow.length > 0 && (
+        <div className="lg:absolute top-0 left-0 lg:h-[100vh!important]">
+          <PolarArea
+            className="h-[20rem!important] md:h-[30rem!important] w-[auto!important]"
+            data={{
+              labels: ["Followers", "Following"],
+              datasets: [
+                {
+                  data: follow,
+                  backgroundColor: [
+                    "rgba(255, 0, 0, 0.6)",
+                    "rgba(56, 255, 12, 0.6)",
+                  ],
+                },
+              ],
+            }}
+            options={{
+              plugins: {
+                legend: {
+                  position: "right",
+                },
+                title: {
+                  position: "bottom",
+                  display: true,
+                  text: "Followers Data",
+                  font: {
+                    size: 20,
+                    weight: "bold",
+                  },
+                  color: "orange",
+                },
+              },
+              responsive: true,
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }
 
-export default SocialCalculator
+export default SocialCalculator;
