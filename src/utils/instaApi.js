@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const getInstInfo = async (username) => {
   // Get User Info
@@ -91,12 +92,12 @@ export const getInstInfo = async (username) => {
           num_posts: allposts.length,
         };
       } catch (error) {
-        console.log(error);
+        toast.error("Error getting user media");
       }
     }
   }
   catch (error) {
-    console.log(error);
+    toast.error("Error getting user info");
   }
 
 }

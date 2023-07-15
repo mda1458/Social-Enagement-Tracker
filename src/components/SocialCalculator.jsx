@@ -5,6 +5,7 @@ import instagram from "../assets/insta.png";
 import ytb from "../assets/ytb.png";
 import { Bar, PolarArea } from "react-chartjs-2";
 import { getInstInfo } from "../utils/instaApi";
+import { toast } from "react-toastify";
 
 const SocialCalculator = () => {
   const [loading, setLoading] = useState(false);
@@ -24,6 +25,7 @@ const SocialCalculator = () => {
     setFollow([data.followers, data.following]);
     setPosts([data.num_posts, data.likes, data.comments]);
     setLoading(false);
+    data.is_private ? toast.warning("Account is private") : setEngagement(((data.likes + data.comments)/data.num_posts / data.followers * 100).toFixed(2));
   };
   const ytbHandle = (e) => {
     e.preventDefault();
