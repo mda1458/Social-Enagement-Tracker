@@ -4,6 +4,7 @@ import axios from "axios";
 import instagram from "../assets/insta.png";
 import ytb from "../assets/ytb.png";
 import { Bar, PolarArea } from "react-chartjs-2";
+import { getInstInfo } from "../utils/instaApi";
 
 const SocialCalculator = () => {
   const [loading, setLoading] = useState(false);
@@ -18,39 +19,11 @@ const SocialCalculator = () => {
     e.preventDefault();
     setLoading(true);
     const username = e.target.username.value;
-    const options = {
-      method: 'GET',
-      url: 'https://instagram-bulk-profile-scrapper.p.rapidapi.com/clients/api/ig/ig_profile',
-      params: {
-        ig: username,
-        response_type: 'feeds'
-      },
-      headers: {
-        'X-RapidAPI-Key': import.meta.env.VITE_INSTA_KEY,
-        'X-RapidAPI-Host': 'instagram-bulk-profile-scrapper.p.rapidapi.com'
-      }
-    };
-
-    try {
-      const response = await axios.request(options);
-      const data = response.data;
-      const followers = data[0].follower_count;
-      const following = data[0].following_count;
-      const posts = data[0].feed.data;
-      const likes = posts.reduce((acc, curr) => acc + curr.like_count, 0);
-      const comments = posts.reduce((acc, curr) => acc + curr.comment_count, 0);
-      const likesperpost = likes / posts.length;
-      const commentsperpost = comments / posts.length;
-      const engagementrate = ((likesperpost + commentsperpost) / followers) * 100;
-      setFollow([followers, following]);
-      setPosts([posts.length, likes, comments]);
-      setEngagement(engagementrate);
-
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
+    const data = await getInstInfo(username);
+    console.log(data);
+    setFollow([data.followers, data.following]);
+    setPosts([data.num_posts, data.likes, data.comments]);
+    setLoading(false);
   };
   const ytbHandle = (e) => {
     e.preventDefault();
