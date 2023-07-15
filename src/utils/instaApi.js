@@ -2,6 +2,24 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const getInstInfo = async (username) => {
+  let instaKey = import.meta.env.VITE_INSTA_KEY_1;
+  if (new Date().getDay() === 1) {
+    instaKey = import.meta.env.VITE_INSTA_KEY_1;
+  } else if (new Date().getDay() === 2) {
+    instaKey = import.meta.env.VITE_INSTA_KEY_2;
+  } else if (new Date().getDay() === 3) {
+    instaKey = import.meta.env.VITE_INSTA_KEY_3;
+  } else if (new Date().getDay() === 4) {
+    instaKey = import.meta.env.VITE_INSTA_KEY_4;
+  } else if (new Date().getDay() === 5) {
+    instaKey = import.meta.env.VITE_INSTA_KEY_5;
+  } else if (new Date().getDay() === 6) {
+    instaKey = import.meta.env.VITE_INSTA_KEY_6;
+  } else if (new Date().getDay() === 7) {
+    instaKey = import.meta.env.VITE_INSTA_KEY_3;
+  }
+
+  console.log(instaKey);
   // Get User Info
   let options = {
     method: 'GET',
@@ -11,7 +29,7 @@ export const getInstInfo = async (username) => {
       response_type: 'feeds'
     },
     headers: {
-      'X-RapidAPI-Key': import.meta.env.VITE_INSTA_KEY_1,
+      'X-RapidAPI-Key': instaKey,
       'X-RapidAPI-Host': 'instagram-bulk-profile-scrapper.p.rapidapi.com'
     }
   };
@@ -37,7 +55,7 @@ export const getInstInfo = async (username) => {
             "",
         },
         headers: {
-          "X-RapidAPI-Key": import.meta.env.VITE_INSTA_KEY_1,
+          "X-RapidAPI-Key": instaKey,
           "X-RapidAPI-Host": "instagram-looter2.p.rapidapi.com",
         },
       };
@@ -62,7 +80,7 @@ export const getInstInfo = async (username) => {
                 end_cursor: end,
               },
               headers: {
-                "X-RapidAPI-Key": import.meta.env.VITE_INSTA_KEY_1,
+                "X-RapidAPI-Key": instaKey,
                 "X-RapidAPI-Host": "instagram-looter2.p.rapidapi.com",
               },
             };

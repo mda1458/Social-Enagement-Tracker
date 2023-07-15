@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 
 import instagram from "../assets/insta.png";
 import ytb from "../assets/ytb.png";
@@ -93,7 +92,7 @@ const SocialCalculator = () => {
         </form>
         {/* Stats Display */}
         <div className="flex flex-col text-center mt-8">
-          <div className="grad-text text-xl">Results for last 12 Posts</div>
+          <div className="grad-text text-xl">Results</div>
           {/* grid */}
           {loading ? (
             <div className="🤚 my-16">
