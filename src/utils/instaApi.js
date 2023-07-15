@@ -113,6 +113,16 @@ export const getInstInfo = async (username) => {
         toast.error("Error getting user media");
       }
     }
+    else {
+      return {
+        followers,
+        following,
+        is_private,
+        likes: 0,
+        comments: 0,
+        num_posts: data[0].media_count,
+      };
+    }
   }
   catch (error) {
     toast.error("Error getting user info");

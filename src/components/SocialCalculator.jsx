@@ -24,7 +24,7 @@ const SocialCalculator = () => {
     setFollow([data.followers, data.following]);
     setPosts([data.num_posts, data.likes, data.comments]);
     setLoading(false);
-    data.is_private ? toast.warning("Account is private") : setEngagement(((data.likes + data.comments)/data.num_posts / data.followers * 100).toFixed(2));
+    data.is_private ? toast.warning("Account is private! So no Post Engagement Data is available") : setEngagement(((data.likes + data.comments)/data.num_posts / data.followers * 100).toFixed(2));
   };
   const ytbHandle = (e) => {
     e.preventDefault();
