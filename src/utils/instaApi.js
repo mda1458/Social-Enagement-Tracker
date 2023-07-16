@@ -69,28 +69,22 @@ export const getInstInfo = async (username) => {
 
         if (data.page_info.has_next_page) {
           let end = data.page_info.end_cursor;
-          let has_next_page = false;
-          do {
-            const options = {
-              method: "GET",
-              url: "https://instagram-looter2.p.rapidapi.com/user-feeds",
-              params: {
-                id: user_id,
-                count: "50",
-                end_cursor: end,
-              },
-              headers: {
-                "X-RapidAPI-Key": instaKey,
-                "X-RapidAPI-Host": "instagram-looter2.p.rapidapi.com",
-              },
-            };
-            const response = await axios.request(options);
-            const data = response.data.data.user.edge_owner_to_timeline_media;
-            allposts = allposts.concat(data.edges);
-            end = data.page_info.end_cursor;
-            has_next_page = data.page_info.has_next_page;
-          }
-          while (has_next_page);
+          const options = {
+            method: "GET",
+            url: "https://instagram-looter2.p.rapidapi.com/user-feeds",
+            params: {
+              id: user_id,
+              count: "50",
+              end_cursor: end,
+            },
+            headers: {
+              "X-RapidAPI-Key": instaKey,
+              "X-RapidAPI-Host": "instagram-looter2.p.rapidapi.com",
+            },
+          };
+          const response = await axios.request(options);
+          const data = response.data.data.user.edge_owner_to_timeline_media;
+          allposts = allposts.concat(data.edges);
         }
 
         // Get stats
