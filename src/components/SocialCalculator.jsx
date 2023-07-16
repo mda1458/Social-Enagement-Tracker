@@ -20,9 +20,11 @@ const SocialCalculator = () => {
     setLoading(true);
     const username = e.target.username.value;
     const data = await getInstInfo(username);
+    const likes = data.likes/data.num_posts;
+    const comments = data.comments/data.num_posts;
     console.log(data);
     setFollow([data.followers, data.following]);
-    setPosts([data.num_posts, data.likes, data.comments]);
+    setPosts([ likes, comments ]);
     setLoading(false);
     data.is_private ? toast.warning("Account is private! So no Post Engagement Data is available") : setEngagement(((data.likes + data.comments)/data.num_posts / data.followers * 100).toFixed(2));
   };
@@ -107,9 +109,8 @@ const SocialCalculator = () => {
             <div className="grid grid-cols-2 gap-8 mt-4">
               <div>Followers: {follow[0]}</div>
               <div>Following: {follow[1]}</div>
-              <div>Posts: {posts[0]}</div>
-              <div>Likes: {posts[1]}</div>
-              <div>Comments: {posts[2]}</div>
+              <div>Avg Likes/post: {posts[0]}</div>
+              <div>Avg Comments/post: {posts[1]}</div>
             </div>
           )}
           <div className="grad-text text-xl font-bold">
@@ -122,20 +123,18 @@ const SocialCalculator = () => {
           <Bar
             className="h-[10rem!important] md:h-[18rem!important] w-[auto!important] lg:mt-[12rem]"
             data={{
-              labels: ["Posts", "Likes", "Comments"],
+              labels: [ "Likes", "Comments" ],
               datasets: [
                 {
                   barThickness: 50,
                   data: posts,
                   backgroundColor: [
                     "rgba(255, 99, 132)",
-                    "rgba(54, 162, 235)",
-                    "rgba(255, 206, 86)",
+                    "rgba(54, 162, 235)"
                   ],
                   borderColor: [
                     "rgba(255, 99, 132, 1)",
                     "rgba(54, 162, 235, 1)",
-                    "rgba(255, 206, 86, 1)",
                   ],
                   borderWidth: 1,
                 },

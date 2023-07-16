@@ -66,9 +66,9 @@ export const getInstInfo = async (username) => {
         const data = response.data.data.user.edge_owner_to_timeline_media;
         // Get all posts
         let allposts = data.edges;
-
+        let end = data.page_info.end_cursor;
+        
         if (data.page_info.has_next_page) {
-          let end = data.page_info.end_cursor;
           const options = {
             method: "GET",
             url: "https://instagram-looter2.p.rapidapi.com/user-feeds",
@@ -104,6 +104,7 @@ export const getInstInfo = async (username) => {
           num_posts: allposts.length,
         };
       } catch (error) {
+        console.log(error);
         toast.error("Error getting user media");
       }
     }
