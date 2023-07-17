@@ -93,11 +93,11 @@ const SocialCalculator = () => {
           </div>
         </form>
         {/* Stats Display */}
-        <div className="flex flex-col text-center mt-8">
+        <div className="flex flex-col text-center my-8">
           <div className="grad-text text-xl">Results</div>
           {/* grid */}
           {loading ? (
-            <div className="🤚 my-16">
+            <div className="🤚 mt-16 mb-8">
               <div className="👉"></div>
               <div className="👉"></div>
               <div className="👉"></div>
