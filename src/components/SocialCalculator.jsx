@@ -93,7 +93,7 @@ const SocialCalculator = () => {
           </div>
         </form>
         {/* Stats Display */}
-        <div className="flex flex-col text-center my-8">
+        <div className="flex flex-col text-center mt-8">
           <div className="grad-text text-xl">Results</div>
           {/* grid */}
           {loading ? (
@@ -113,7 +113,7 @@ const SocialCalculator = () => {
               <div>Avg Comments/post: {posts[1]}</div>
             </div>
           )}
-          <div className="grad-text text-xl font-bold">
+          <div className="grad-text text-xl font-bold mt-8">
             Engagement Rate: {engagement}%
           </div>
         </div>
