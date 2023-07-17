@@ -19,7 +19,6 @@ export const getInstInfo = async (username) => {
     instaKey = import.meta.env.VITE_INSTA_KEY_3;
   }
 
-  console.log(instaKey);
   // Get User Info
   let options = {
     method: 'GET',
@@ -62,30 +61,9 @@ export const getInstInfo = async (username) => {
 
       try {
         const response = await axios.request(options);
-        console.log(response.data.data);
         const data = response.data.data.user.edge_owner_to_timeline_media;
         // Get all posts
         let allposts = data.edges;
-        let end = data.page_info.end_cursor;
-        
-        if (data.page_info.has_next_page) {
-          const options = {
-            method: "GET",
-            url: "https://instagram-looter2.p.rapidapi.com/user-feeds",
-            params: {
-              id: user_id,
-              count: "50",
-              end_cursor: end,
-            },
-            headers: {
-              "X-RapidAPI-Key": instaKey,
-              "X-RapidAPI-Host": "instagram-looter2.p.rapidapi.com",
-            },
-          };
-          const response = await axios.request(options);
-          const data = response.data.data.user.edge_owner_to_timeline_media;
-          allposts = allposts.concat(data.edges);
-        }
 
         // Get stats
         const likes = allposts.reduce((acc, curr) => {
@@ -104,7 +82,6 @@ export const getInstInfo = async (username) => {
           num_posts: allposts.length,
         };
       } catch (error) {
-        console.log(error);
         toast.error("Error getting user media");
       }
     }

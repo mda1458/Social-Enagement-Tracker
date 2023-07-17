@@ -22,7 +22,6 @@ const SocialCalculator = () => {
     const data = await getInstInfo(username);
     const likes = data.likes/data.num_posts;
     const comments = data.comments/data.num_posts;
-    console.log(data);
     setFollow([data.followers, data.following]);
     setPosts([ likes, comments ]);
     setLoading(false);
@@ -30,6 +29,7 @@ const SocialCalculator = () => {
   };
   const ytbHandle = (e) => {
     e.preventDefault();
+    toast.warning("Youtube is not supported yet!");
   };
 
   return (
