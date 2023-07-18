@@ -5,6 +5,7 @@ import ytb from "../assets/ytb.png";
 import { Bar, PolarArea } from "react-chartjs-2";
 import { getInstInfo } from "../utils/instaApi";
 import { toast } from "react-toastify";
+import Loader from "./Loader";
 
 const SocialCalculator = () => {
   const [loading, setLoading] = useState(false);
@@ -93,30 +94,22 @@ const SocialCalculator = () => {
           </div>
         </form>
         {/* Stats Display */}
+        {!loading ? <Loader/>
+          : (
         <div className="flex flex-col text-center mt-8">
           <div className="grad-text text-xl">Results</div>
           {/* grid */}
-          {loading ? (
-            <div className="🤚 mt-16 mb-8">
-              <div className="👉"></div>
-              <div className="👉"></div>
-              <div className="👉"></div>
-              <div className="👉"></div>
-              <div className="🌴"></div>
-              <div className="👍"></div>
-            </div>
-          ) : (
             <div className="grid grid-cols-2 gap-8 mt-4">
               <div>Followers: {follow[0]}</div>
               <div>Following: {follow[1]}</div>
               <div>Avg Likes/post: {posts[0]}</div>
               <div>Avg Comments/post: {posts[1]}</div>
             </div>
-          )}
           <div className="grad-text text-xl font-bold mt-8">
             Engagement Rate: {engagement}%
           </div>
         </div>
+      )}
       </div>
       {posts.length > 0 && (
         <div className="lg:absolute top-0 right-0 lg:h-[100vh!important]">
